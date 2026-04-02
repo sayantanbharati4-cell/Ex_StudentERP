@@ -72,7 +72,7 @@ Once the database is imported, you can access the project:
 ### Step 4 — Default Login Credentials
 Use the following credentials to access the Admin Dashboard:
 - **Email:** `abc@domain.com` (or `admin@college.edu`)
-- **Password:** `123456`
+- **Password:** `admin123`
 
 ---
 
@@ -86,7 +86,7 @@ Currently, the app expects to be inside a folder named `studentErpFin`. If you r
 1. Open the file: `config/config.php`
 2. Find this line:
    ```php
-   define('BASE_URL', 'http://localhost/studentErpFin');
+   define('BASE_URL', 'http://localhost/Ex_StudentERP');
    ```
 3. Change it to your new path or live domain:
    ```php
