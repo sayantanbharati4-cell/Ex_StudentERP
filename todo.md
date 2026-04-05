@@ -1,11 +1,11 @@
 # StudentERP Task List
 
-- [ ] **1. Academics - Bulk Upload:** Alongside add students, add a bulk upload option from a CSV file. The popup should show required fields. Implementation should reject invalid/missing data and show a report.
-- [ ] **3. Student Profile - Results & Fees:** 
-    - Add a result section with grades/marks (will need a new db).
-    - Add a fees tracing section. Calculate fine if fees are past the 11th (e.g. 7th is due date, fine starts 11th adding 150 per day). 
+- [x] **1. Academics - Bulk Upload:** CSV upload integrated into student registration with template support and auto-generation of admission numbers.
+- [x] **2. Student Info - Additional Fields:** Profile enriched with Aadhaar, ID marks, parent occupation, and address.
+- [x] **3. Student Profile - Fees Tracking:** 
+    - Add a fees tracking section. Calculate fine if fees are past the 11th (e.g. 7th is due date, fine starts 11th adding 150 per day). 
     - Support different payment periods: monthly, quarterly, half-yearly, yearly, one-time.
-- [ ] **4. Attendance Tracking - Fixes & Reports:** 
+- [x] **4. Attendance Tracking - Fixes & Reports:** 
     - Add downloadable report for a whole batch at once.
     - Fix display issue (not showing correctly date wise).
     - Fix "Total Records" text size (slightly bigger than others).
@@ -13,8 +13,5 @@
     - Internal/Semester: subjects, batch with year, full mark, student, received mark. Track by id/register number.
     - Project: name, batch year, branch name, instructor, students.
     - Practical: similar structure.
-- [ ] **7. Faculty Management - Salary & Activities:** Add feature to track faculty salary and activities.
-- [ ] **8. Programs - Class Scheduling:** Make calendar editable, synced with IRL calendar. 
-    - Admin can mark holidays.
-    - Schedule classes with duration, subjects, teachers, room no.
-    - Daily timetable 9am to 5pm, manually editable, with conflict checking between batches.
+- [x] **7. Faculty Management - Salary & Activities:** Added feature to track faculty salary history and activity logs with modal-based inputs on staff profile.
+- [x] **8. Programs - Class Scheduling:** Made calendar editable with dynamic modals, conflict awareness for batch scheduling, and holiday management.
