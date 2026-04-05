@@ -20,15 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $count = $pdo->query("SELECT COUNT(*) FROM students WHERE YEAR(created_at)=$year")->fetchColumn();
         $adm_no = 'ADM'.$year.str_pad($count+1, 4, '0', STR_PAD_LEFT);
 
-        $stmt = $pdo->prepare("INSERT INTO students (admission_number,first_name,middle_name,last_name,
+        $stmt = $pdo->prepare("INSERT INTO students (admission_number,registration_no,roll,roll_extra,first_name,middle_name,last_name,
             date_of_birth,gender,blood_group,nationality,religion,caste_category,
             personal_email,phone,alternate_phone,permanent_address,current_address,city,state,pincode,country,
             program_id,batch_id,admission_date,admission_type,admission_category,current_semester,
             father_name,father_phone,father_email,mother_name,mother_phone,
             guardian_name,guardian_relation,guardian_phone,status,created_by)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stmt->execute([
-            $adm_no,
+            $adm_no, $_POST['registration_no'] ?? null, $_POST['roll'] ?? null, $_POST['roll_extra'] ?? null,
             $_POST['first_name'], $_POST['middle_name'] ?? '', $_POST['last_name'],
             $_POST['date_of_birth'], $_POST['gender'], $_POST['blood_group'] ?? null,
             $_POST['nationality'] ?? 'Indian', $_POST['religion'] ?? null, $_POST['caste_category'] ?? null,
@@ -77,6 +77,18 @@ $B = BASE_URL;
             <div class="card-header"><h6 class="mb-0"><i class="bi bi-person me-2"></i>Personal Information</h6></div>
             <div class="card-body">
                 <div class="row g-3">
+                    <div class="col-md-2">
+                        <label class="form-label">Reg. No.</label>
+                        <input type="text" name="registration_no" class="form-control" value="<?php echo htmlspecialchars($old['registration_no'] ?? ''); ?>">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">Roll</label>
+                        <input type="text" name="roll" class="form-control" value="<?php echo htmlspecialchars($old['roll'] ?? ''); ?>">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">No.</label>
+                        <input type="text" name="roll_extra" class="form-control" value="<?php echo htmlspecialchars($old['roll_extra'] ?? ''); ?>">
+                    </div>
                     <div class="col-md-4">
                         <label class="form-label">First Name <span class="text-danger">*</span></label>
                         <input type="text" name="first_name" class="form-control" value="<?php echo htmlspecialchars($old['first_name'] ?? ''); ?>" required>

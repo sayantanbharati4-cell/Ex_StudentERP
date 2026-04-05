@@ -14,6 +14,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("UPDATE students SET
+        registration_no=?,roll=?,roll_extra=?,
         first_name=?,middle_name=?,last_name=?,date_of_birth=?,gender=?,blood_group=?,nationality=?,
         religion=?,caste_category=?,aadhaar_number=?,personal_email=?,phone=?,alternate_phone=?,
         permanent_address=?,current_address=?,city=?,state=?,pincode=?,country=?,
@@ -22,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         guardian_name=?,guardian_relation=?,guardian_phone=?,guardian_email=?,status=?
         WHERE id=?");
     $stmt->execute([
+        $_POST['registration_no']??null,$_POST['roll']??null,$_POST['roll_extra']??null,
         $_POST['first_name'],$_POST['middle_name']??'',$_POST['last_name'],$_POST['date_of_birth'],$_POST['gender'],
         $_POST['blood_group']??null,$_POST['nationality']??'Indian',
         $_POST['religion']??null,$_POST['caste_category']??null,$_POST['aadhaar_number']??null,
@@ -56,6 +58,9 @@ $B = BASE_URL;
 <form method="POST" class="row g-4">
     <div class="col-12"><div class="card"><div class="card-header"><h6 class="mb-0">Personal Information</h6></div><div class="card-body">
         <div class="row g-3">
+            <div class="col-md-2"><label class="form-label">Reg. No.</label><input type="text" name="registration_no" class="form-control" value="<?php echo htmlspecialchars($t['registration_no']??''); ?>"></div>
+            <div class="col-md-1"><label class="form-label">Roll</label><input type="text" name="roll" class="form-control" value="<?php echo htmlspecialchars($t['roll']??''); ?>"></div>
+            <div class="col-md-1"><label class="form-label">No.</label><input type="text" name="roll_extra" class="form-control" value="<?php echo htmlspecialchars($t['roll_extra']??''); ?>"></div>
             <div class="col-md-4"><label class="form-label">First Name</label><input type="text" name="first_name" class="form-control" value="<?php echo htmlspecialchars($t['first_name']); ?>" required></div>
             <div class="col-md-4"><label class="form-label">Middle Name</label><input type="text" name="middle_name" class="form-control" value="<?php echo htmlspecialchars($t['middle_name']??''); ?>"></div>
             <div class="col-md-4"><label class="form-label">Last Name</label><input type="text" name="last_name" class="form-control" value="<?php echo htmlspecialchars($t['last_name']); ?>" required></div>

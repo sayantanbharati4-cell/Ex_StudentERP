@@ -63,10 +63,21 @@ $badge = match($s['status']) { 'active'=>'badge-active','inactive'=>'badge-inact
                 <div class="tab-pane fade show active" id="personal">
                     <div class="row g-2 mt-1">
                         <?php
-                        $fields_personal = ['Date of Birth'=>$s['date_of_birth'],'Gender'=>ucfirst($s['gender']),'Blood Group'=>$s['blood_group'],'Nationality'=>$s['nationality'],'Religion'=>$s['religion'],'Caste Category'=>$s['caste_category'],'Aadhaar'=>$s['aadhaar_number']];
+                        $fields_personal = [
+                            'Registration No.' => $s['registration_no'],
+                            'Roll' => $s['roll'],
+                            'No.' => $s['roll_extra'],
+                            'Date of Birth' => $s['date_of_birth'],
+                            'Gender' => ucfirst($s['gender']),
+                            'Blood Group' => $s['blood_group'],
+                            'Nationality' => $s['nationality']
+                        ];
                         foreach ($fields_personal as $lbl => $val): ?>
                         <div class="col-6"><small class="text-muted"><?php echo $lbl; ?></small><div class="fw-medium"><?php echo htmlspecialchars($val ?: '—'); ?></div></div>
                         <?php endforeach; ?>
+                        <div class="col-6"><small class="text-muted">Religion</small><div class="fw-medium"><?php echo htmlspecialchars($s['religion'] ?: '—'); ?></div></div>
+                        <div class="col-6"><small class="text-muted">Caste Category</small><div class="fw-medium"><?php echo htmlspecialchars($s['caste_category'] ?: '—'); ?></div></div>
+                        <div class="col-6"><small class="text-muted">Aadhaar</small><div class="fw-medium"><?php echo htmlspecialchars($s['aadhaar_number'] ?: '—'); ?></div></div>
                     </div>
                 </div>
                 <!-- Contact -->
