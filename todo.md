@@ -1,7 +1,6 @@
 # StudentERP Task List
 
 - [ ] **1. Academics - Bulk Upload:** Alongside add students, add a bulk upload option from a CSV file. The popup should show required fields. Implementation should reject invalid/missing data and show a report.
-- [ ] **2. Student Info - Additional Fields:** Add `registrationno`, `roll`, `no` (roll and no are separate things) to student info.
 - [ ] **3. Student Profile - Results & Fees:** 
     - Add a result section with grades/marks (will need a new db).
     - Add a fees tracing section. Calculate fine if fees are past the 11th (e.g. 7th is due date, fine starts 11th adding 150 per day). 
