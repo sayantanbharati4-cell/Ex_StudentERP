@@ -11,7 +11,13 @@ These queries ensure your database has all the columns and tables required for v
 -- 1. Ensure new columns exist in Students
 -- (These may already exist in your resources/college_db.sql but let's be sure)
 ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `registration_no` VARCHAR(50) AFTER `admission_number`;
+ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `roll` VARCHAR(50) AFTER `registration_no`;
+ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `roll_extra` VARCHAR(50) AFTER `roll`;
 ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `identification_mark` TEXT AFTER `aadhaar_number`;
+ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `identification_mark_extra` TEXT AFTER `identification_mark`;
+ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `father_occupation` VARCHAR(255) AFTER `father_phone`;
+ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `mother_occupation` VARCHAR(255) AFTER `mother_phone`;
+ALTER TABLE `students` ADD COLUMN IF NOT EXISTS `parent_address` TEXT AFTER `guardian_phone`;
 
 -- 2. Ensure new columns exist in Attendance
 -- Tracks multiple daily sessions and custom mandatory remarks

@@ -10,7 +10,7 @@ $stmt->execute([$id]);
 $s = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$s) { echo '<div class="alert alert-danger">Student not found.</div>'; return; }
 $B = BASE_URL;
-$badge = match($s['status']) { 'active'=>'badge-active','inactive'=>'badge-inactive','graduated'=>'badge-completed', default=>'badge-pending' };
+$badge = match($s['status'] ?? '') { 'active'=>'badge-active','inactive'=>'badge-inactive','graduated'=>'badge-completed', default=>'badge-pending' };
 ?>
 <div class="page-header">
     <div>
@@ -64,13 +64,13 @@ $badge = match($s['status']) { 'active'=>'badge-active','inactive'=>'badge-inact
                     <div class="row g-2 mt-1">
                         <?php
                         $fields_personal = [
-                            'Registration No.' => $s['registration_no'],
-                            'Roll' => $s['roll'],
-                            'No.' => $s['roll_extra'],
-                            'Date of Birth' => $s['date_of_birth'],
-                            'Gender' => ucfirst($s['gender']),
-                            'Blood Group' => $s['blood_group'],
-                            'Nationality' => $s['nationality']
+                            'Registration No.' => $s['registration_no'] ?? '—',
+                            'Roll' => $s['roll'] ?? '—',
+                            'No.' => $s['roll_extra'] ?? '—',
+                            'Date of Birth' => $s['date_of_birth'] ?? '—',
+                            'Gender' => ucfirst($s['gender'] ?? '—'),
+                            'Blood Group' => $s['blood_group'] ?? '—',
+                            'Nationality' => $s['nationality'] ?? '—'
                         ];
                         foreach ($fields_personal as $lbl => $val): ?>
                         <div class="col-6"><small class="text-muted"><?php echo $lbl; ?></small><div class="fw-medium"><?php echo htmlspecialchars($val ?: '—'); ?></div></div>
@@ -96,16 +96,16 @@ $badge = match($s['status']) { 'active'=>'badge-active','inactive'=>'badge-inact
                     <div class="row g-2 mt-1">
                         <?php
                         $fields_g = [
-                            "Father's Name" => $s['father_name'],
-                            "Father's Phone" => $s['father_phone'],
-                            "Father's Occupation" => $s['father_occupation'],
-                            "Mother's Name" => $s['mother_name'],
-                            "Mother's Phone" => $s['mother_phone'],
-                            "Mother's Occupation" => $s['mother_occupation'],
-                            'Guardian Name' => $s['guardian_name'],
-                            'Relation' => $s['guardian_relation'],
-                            'Guardian Phone' => $s['guardian_phone'],
-                            'Parent Address' => $s['parent_address']
+                            "Father's Name" => $s['father_name'] ?? '—',
+                            "Father's Phone" => $s['father_phone'] ?? '—',
+                            "Father's Occupation" => $s['father_occupation'] ?? '—',
+                            "Mother's Name" => $s['mother_name'] ?? '—',
+                            "Mother's Phone" => $s['mother_phone'] ?? '—',
+                            "Mother's Occupation" => $s['mother_occupation'] ?? '—',
+                            'Guardian Name' => $s['guardian_name'] ?? '—',
+                            'Relation' => $s['guardian_relation'] ?? '—',
+                            'Guardian Phone' => $s['guardian_phone'] ?? '—',
+                            'Parent Address' => $s['parent_address'] ?? '—'
                         ];
                         foreach ($fields_g as $lbl => $val): ?>
                         <div class="col-6"><small class="text-muted"><?php echo $lbl; ?></small><div class="fw-medium"><?php echo htmlspecialchars($val ?: '—'); ?></div></div>
