@@ -37,7 +37,7 @@ elseif ($type_filter === 'practical') $where .= " AND sg.is_practical=1";
 elseif ($type_filter === 'project') $where .= " AND sg.is_project=1";
 elseif ($type_filter === 'semester') $where .= " AND sg.is_semester=1";
 
-$rows = $pdo->query("SELECT sg.*, CONCAT(s.first_name,' ',s.last_name) AS student_name, s.registration_no, s.roll, s.admission_number, sub.name AS subject_name, sub.code AS sub_code, b.batch_code, e.name AS exam_name, (sg.marks_obtained/NULLIF(sg.total_marks,0)*100) AS percentage, IF((sg.marks_obtained/NULLIF(sg.total_marks,0))>=0.4, 'pass', 'fail') AS result FROM student_grades sg JOIN students s ON sg.student_id=s.id JOIN subjects sub ON sg.subject_id=sub.id LEFT JOIN academic_batches b ON sg.batch_id=b.id LEFT JOIN examinations e ON sg.examination_id=e.id $where ORDER BY sg.created_at DESC LIMIT 200")->fetchAll(PDO::FETCH_ASSOC);
+$rows = $pdo->query("SELECT sg.*, CONCAT(s.first_name,' ',s.last_name) AS student_name, s.registration_no, s.roll, s.admission_number, sub.name AS subject_name, sub.code AS sub_code, b.batch_code, e.name AS exam_name, (sg.marks_obtained/NULLIF(sg.total_marks,0)*100) AS percentage, IF((sg.marks_obtained/NULLIF(sg.total_marks,0))>=0.4, 'pass', 'fail') AS result FROM student_grades sg JOIN students s ON sg.student_id=s.id JOIN subjects sub ON sg.subject_id=sub.id LEFT JOIN academic_batches b ON s.batch_id=b.id LEFT JOIN examinations e ON sg.examination_id=e.id $where ORDER BY sg.created_at DESC LIMIT 200")->fetchAll(PDO::FETCH_ASSOC);
 
 $B = BASE_URL;
 ?>

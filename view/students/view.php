@@ -153,20 +153,37 @@ $badge = match($s['status'] ?? '') { 'active'=>'badge-active','inactive'=>'badge
                         </div>
                     </div>
                 </div>
-                <!-- Results -->
+                <!-- Academic Results (v1.7) -->
                 <div class="tab-pane fade" id="results">
                     <?php
-                    $stmtR = $pdo->prepare("SELECT sg.*, sub.name as sub_name, sub.code as sub_code FROM student_grades sg JOIN subjects sub ON sg.subject_id=sub.id WHERE student_id=? ORDER BY sg.created_at DESC");
-                    $stmtR->execute([$id]);
-                    $res = $stmtR->fetchAll(PDO::FETCH_ASSOC);
-                    if ($res): ?>
-                    <div class="table-responsive"><table class="table table-sm table-hover border">
-                        <thead class="bg-light"><tr><th>Subject</th><th>Type</th><th>Score</th><th>Grade</th></tr></thead>
-                        <tbody><?php foreach($res as $r): ?>
-                            <tr><td><strong><?php echo $r['sub_code']; ?></strong><br><small class="text-muted"><?php echo $r['sub_name']; ?></small></td><td><?php echo $r['is_semester']?'Semester':'Internal'; ?></td><td class="fw-bold"><?php echo $r['marks_obtained']; ?>/<?php echo $r['total_marks']; ?></td><td><span class="badge" style="background:var(--olive-light);color:var(--olive)"><?php echo $r['grade']; ?></span></td></tr>
-                        <?php endforeach; ?></tbody>
-                    </table></div>
-                    <?php else: ?><div class="text-center py-4 text-muted"><i class="bi bi-mortarboard fs-2 d-block"></i>No results posted yet.</div><?php endif; ?>
+                    $grades = $pdo->prepare("SELECT sg.*, sub.name as subject_name, sub.code as sub_code FROM student_grades sg JOIN subjects sub ON sg.subject_id=sub.id WHERE student_id=? ORDER BY sg.created_at DESC");
+                    $grades->execute([$id]);
+                    $g_rows = $grades->fetchAll(PDO::FETCH_ASSOC);
+                    if ($g_rows): ?>
+                    <div class="table-responsive mt-2">
+                        <table class="table table-sm table-hover border">
+                            <thead class="bg-light"><tr><th>Reg./Roll</th><th>Subject</th><th>Type</th><th>Score</th><th class="text-center">Grade</th></tr></thead>
+                            <tbody>
+                                <?php foreach ($g_rows as $gr): 
+                                    $g_badge = $gr['marks_obtained'] >= (0.4 * $gr['total_marks']) ? 'badge-active' : 'badge-inactive';
+                                ?>
+                                <tr>
+                                    <td><code><?php echo htmlspecialchars($s['registration_no'] ?: '—'); ?></code><br><small class="text-muted">RL: <?php echo htmlspecialchars($s['roll'] ?: '—'); ?></small></td>
+                                    <td><strong><?php echo $gr['sub_code']; ?></strong><br><small class="text-muted"><?php echo $gr['subject_name']; ?></small></td>
+                                    <td>
+                                        <?php if($gr['is_internal']) echo '<span class="badge bg-info px-1 py-0" style="font-size:0.6rem">Int</span> '; ?>
+                                        <?php if($gr['is_semester']) echo '<span class="badge bg-primary px-1 py-0" style="font-size:0.6rem">Sem</span>'; ?>
+                                    </td>
+                                    <td class="fw-bold"><?php echo $gr['marks_obtained']; ?>/<?php echo $gr['total_marks']; ?></td>
+                                    <td class="text-center"><span class="badge <?php echo $g_badge; ?>"><?php echo $gr['grade']; ?></span></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php else: ?>
+                    <div class="text-center py-5 text-muted"><i class="bi bi-mortarboard fs-2 d-block mb-2"></i>No result records available.</div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
