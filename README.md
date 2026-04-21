@@ -67,15 +67,13 @@ Ensure you have **XAMPP** installed and both **Apache** and **MySQL** are runnin
 
 ### Step 3 — Visit the Application
 Once the database is imported, you can access the project:
-**URL:** `http://localhost/studentErpFin`
+**URL:** `http://localhost/Ex_StudentERP`
 
 ### Step 4 — Default Login Credentials
 Use the following credentials to access the Admin Dashboard:
 - **Email:** `abc@domain.com` (or `admin@college.edu`)
-- **Password:** `123456`
-Use the following credentials to access the Faculty Dashboard:
-- **Email:** `abcf@domain.com` (or `admin@college.edu`)
-- **Password:** `123456`
+- **Password:** `admin123`
+
 ---
 
 ## 4. Customization Guide (URL & Database)
