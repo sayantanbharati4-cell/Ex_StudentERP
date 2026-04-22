@@ -7,7 +7,7 @@
 | Student Name | Registration Number |
 |---|---|
 | PANKAJ KUMAR | D232419319 |
-| SK MD SADIQUED | D232419320 |
+| SK MD SADIQUE | D232419320 |
 | BISHESWAR BHATTACHARJEE | D232419321 |
 | PALLAB SARKAR | D232419324 |
 | RAMA MAITY | D232419325 |
@@ -301,55 +301,26 @@ Automated examination management with:
 
 ### 4.1 Table Design
 
-#### Table 1: `exams`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| exam_id | INT | PRIMARY KEY, AUTO_INCREMENT | Exam identifier |
-| exam_code | VARCHAR(20) | UNIQUE | Exam code |
-| course_id | INT | FOREIGN KEY | Course being examined |
-| exam_date | DATE | NOT NULL | Exam date |
-| exam_time_start | TIME | NOT NULL | Exam start time |
-| exam_time_end | TIME | NOT NULL | Exam end time |
-| venue_id | INT | FOREIGN KEY | Location of exam |
-| exam_type | VARCHAR(50) | MidTerm, FinalExam, Practical, etc. |
-| total_marks | INT | NOT NULL | Total marks for exam |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+The Examination Management module primarily interacts with the following table from the core database:
 
-#### Table 2: `seat_allocation`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| allocation_id | INT | PRIMARY KEY, AUTO_INCREMENT | Allocation record |
-| exam_id | INT | FOREIGN KEY | Reference to exam |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| seat_number | VARCHAR(20) | NOT NULL | Allocated seat |
-| venue_id | INT | FOREIGN KEY | Exam venue |
-| invigilator_id | INT | FOREIGN KEY | Assigned invigilator |
-| allocated_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Allocation timestamp |
-
-#### Table 3: `exam_results`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| result_id | INT | PRIMARY KEY, AUTO_INCREMENT | Result record |
-| exam_id | INT | FOREIGN KEY | Reference to exam |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| marks_obtained | INT | Marks obtained (0 to total_marks) |
-| is_passed | BOOLEAN | Pass/Fail status |
-| entered_by | INT | FOREIGN KEY | Faculty entering marks |
-| entered_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Entry timestamp |
-| published | BOOLEAN | DEFAULT FALSE | Result published to student |
-
-#### Table 4: `revaluation_requests`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| request_id | INT | PRIMARY KEY, AUTO_INCREMENT | Request identifier |
-| result_id | INT | FOREIGN KEY | Reference to result |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| request_date | DATE | NOT NULL | Request submission date |
-| reason | TEXT | Reason for revaluation |
-| status | ENUM('Pending','Under Review','Completed') | DEFAULT 'Pending' | Request status |
-| marks_after_revaluation | INT | Revised marks if completed |
-| reviewed_by | INT | FOREIGN KEY | Faculty who reviewed |
-| reviewed_date | DATE | Review completion date |
+#### Table 1: `examinations`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| name | varchar(255) | Name of the exam (e.g., Mid Term - Data Structures) |
+| exam_type | varchar(50) | Type of exam (Mid Term, Final, etc.) |
+| program_id | int(11) | Reference to academic program |
+| batch_id | int(11) | Reference to academic batch |
+| semester | int(11) | Semester number |
+| academic_year | varchar(20) | Academic year (e.g., 2024-25) |
+| exam_date | date | Date of the exam |
+| start_time | time | Start time of the exam |
+| end_time | time | End time of the exam |
+| duration_minutes | int(11) | Duration in minutes |
+| total_marks | int(11) | Maximum marks |
+| passing_marks | int(11) | Minimum marks to pass |
+| exam_venue | varchar(255) | Venue/Room number |
+| status | enum | scheduled, completed, cancelled, upcoming |
 
 ### 4.2 Flowchart
 
@@ -367,17 +338,28 @@ Automated examination management with:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots showing:]
+**1. Exam Schedule Creation**
+*Interface for administrators to define new examination dates and venues.*
+- Fields: Exam Name, Type, Program, Batch, Date, Time, Venue.
+- *Sample Input:* Name: "Mid Term - Data Structures", Date: 2025-03-10, Venue: LC-101.
+![Exam Schedule Creation](https://example.com/screenshots/exam_schedule.png)
 
-1. **Exam Schedule Creation**: [Screenshot of exam scheduling form with date, time, venue fields]
+**2. Examination Dashboard / List View**
+*Displays all scheduled and upcoming examinations.*
+| Exam Name | Date | Time | Venue | Status |
+|---|---|---|---|---|
+| Mid Term - Data Structures | 2025-03-10 | 10:00 AM | LC-101 | scheduled |
+| Mid Term - DBMS | 2025-03-12 | 10:00 AM | LC-102 | scheduled |
+| Mid Term - Computer Networks | 2025-03-14 | 10:00 AM | LC-103 | scheduled |
+![Examination Dashboard](https://example.com/screenshots/exam_dashboard.png)
 
-2. **Seat Allocation Result**: [Screenshot showing allocated seats with seat numbers and venues]
-
-3. **Student Hall Ticket**: [PDF screenshot showing student name, roll number, exam details, seat number]
-
-4. **Result Entry Form**: [Screenshot showing marks entry form for multiple students]
-
-5. **Result Publication**: [Screenshot showing student result with marks, grade, and pass/fail status]
+**3. Exam Hall Ticket**
+*Generated PDF view for students containing their exam schedule.*
+- Student Name: Aarav K Mehta
+- Roll Number: CSE24001
+- Subject: Data Structures (CSE201)
+- Venue: LC-101
+![Exam Hall Ticket](https://example.com/screenshots/exam_hall_ticket.png)
 
 ---
 

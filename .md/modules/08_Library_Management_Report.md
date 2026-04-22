@@ -310,69 +310,29 @@ Automated library management with:
 
 ### 4.1 Table Design
 
-#### Table 1: `books`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| book_id | INT | PRIMARY KEY, AUTO_INCREMENT | Book identifier |
-| isbn | VARCHAR(20) | UNIQUE | ISBN number |
-| title | VARCHAR(200) | NOT NULL | Book title |
-| author_id | INT | FOREIGN KEY | Book author |
-| publisher_id | INT | FOREIGN KEY | Publisher |
-| edition | VARCHAR(50) | Book edition |
-| publication_year | YEAR | Publication year |
-| pages | INT | Number of pages |
-| category | VARCHAR(100) | Dewey/Library classification |
-| description | LONGTEXT | Book description |
-| total_copies | INT | Total copies in library |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Addition date |
+The Library Management module utilizes the following table from the core database:
 
-#### Table 2: `book_copies`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| copy_id | INT | PRIMARY KEY, AUTO_INCREMENT | Copy identifier |
-| book_id | INT | FOREIGN KEY | Reference to book |
-| barcode | VARCHAR(50) | UNIQUE | Copy barcode |
-| location | VARCHAR(100) | Shelf location |
-| acquisition_date | DATE | When copy was acquired |
-| status | ENUM('Available','Borrowed','Damaged','Lost') | Current status |
-| condition | VARCHAR(50) | Book condition (Good, Fair, Poor) |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
-
-#### Table 3: `borrowing`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| borrow_id | INT | PRIMARY KEY, AUTO_INCREMENT | Borrow transaction |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| copy_id | INT | FOREIGN KEY | Reference to copy |
-| issue_date | DATE | NOT NULL | Date of borrowing |
-| due_date | DATE | NOT NULL | Expected return date |
-| return_date | DATE | Actual return date |
-| returned_condition | VARCHAR(50) | Book condition on return |
-| is_overdue | BOOLEAN | DEFAULT FALSE | Overdue status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Transaction date |
-
-#### Table 4: `fines`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| fine_id | INT | PRIMARY KEY, AUTO_INCREMENT | Fine identifier |
-| borrow_id | INT | FOREIGN KEY | Reference to borrow |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| days_overdue | INT | Number of days overdue |
-| fine_amount | DECIMAL(8,2) | Fine in rupees |
-| fine_status | ENUM('Due','Paid','Waived') | DEFAULT 'Due' | Payment status |
-| paid_date | DATE | Date fine was paid |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Fine creation date |
-
-#### Table 5: `reservations`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| reservation_id | INT | PRIMARY KEY, AUTO_INCREMENT | Reservation identifier |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| book_id | INT | FOREIGN KEY | Reference to book |
-| reservation_date | DATE | NOT NULL | Date of reservation |
-| priority_queue | INT | Position in queue |
-| status | ENUM('Active','Notified','Cancelled','Expired') | Reservation status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+#### Table 1: `library_books`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| title | varchar(255) | Book title |
+| isbn | varchar(50) | ISBN number |
+| author | varchar(255) | Primary author |
+| co_author | varchar(255) | Co-author(s) |
+| publisher | varchar(255) | Publisher name |
+| publication_year | varchar(10) | Year of publication |
+| edition | varchar(50) | Book edition |
+| category | varchar(100) | Main category (e.g., Computer Science) |
+| sub_category | varchar(100) | Sub-category (e.g., Algorithms) |
+| language | varchar(50) | Book language |
+| total_pages | int(11) | Total number of pages |
+| total_copies | int(11) | Total copies available in library |
+| available_copies | int(11) | Current available copies |
+| rack_number | varchar(50) | Storage rack location |
+| shelf_number | varchar(50) | Storage shelf location |
+| status | enum | active, lost, damaged, withdrawn |
+| created_at | timestamp | Record creation timestamp |
 
 ### 4.2 Flowchart
 
@@ -390,17 +350,38 @@ Automated library management with:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots showing:]
+**1. Library Book Catalog**
+*Searchable interface for students and librarians to locate books.*
+| Book Title | Author | Category | Available | Rack/Shelf |
+|---|---|---|---|---|
+| Introduction to Algorithms | Thomas H. Cormen | Computer Science | 3 / 5 | A1 / S1 |
+| Digital Design | M. Morris Mano | Electronics | 2 / 4 | B2 / S1 |
+| Database System Concepts | Abraham Silberschatz | Computer Science | 4 / 4 | A2 / S1 |
+![Book Catalog](https://example.com/screenshots/lib_catalog.png)
 
-1. **Book Catalog Search**: [Screenshot showing book search interface with filters for author, category, availability]
+**2. Book Details View**
+*Detailed information about a specific book title and its current status.*
+- Title: Introduction to Algorithms
+- ISBN: 978-0262033848
+- Author: Thomas H. Cormen, Charles E. Leiserson
+- Language: English
+- Condition: Good
+![Book Details](https://example.com/screenshots/lib_details.png)
 
-2. **Book Details**: [Screenshot showing book information with cover, availability status, copies count]
+**3. Book Borrowing Transaction**
+*Interface for librarians to issue books using barcodes.*
+- Student: Aarav Mehta (CSE24001)
+- Book Scanned: Digital Design (ISBN: 978-0134549897)
+- Issue Date: 2026-04-20
+- Due Date: 2026-05-04
+![Book Borrowing](https://example.com/screenshots/lib_borrow.png)
 
-3. **Borrowing Transaction**: [Screenshot showing barcode scanning form and borrowed books list]
-
-4. **Borrowing History**: [Screenshot showing student's borrowing history with due dates and overdue status]
-
-5. **Fine Management**: [Screenshot showing student's fines, payment status, and payment interface]
+**4. Student Borrowing History**
+*View for students to track their current borrowings and past history.*
+- Current Borrowed: "Introduction to Algorithms"
+- Due Date: 2026-05-10
+- Overdue Fines: None
+![Borrowing History](https://example.com/screenshots/lib_history.png)
 
 ---
 

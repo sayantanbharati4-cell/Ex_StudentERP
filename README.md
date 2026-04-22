@@ -59,11 +59,10 @@ Ensure you have **XAMPP** installed and both **Apache** and **MySQL** are runnin
 
 ### Step 2 — Import the Database
 1. Open your browser and navigate to `http://localhost/phpmyadmin`
-2. Create a new database named **`student_erp`**. Ensure the collation is `utf8mb4_general_ci`.
-3. Select the newly created `student_erp` database on the left sidebar.
+2. Create a new database named **`college_db`**. Ensure the collation is `utf8mb4_general_ci`.
+3. Select the newly created `college_db` database on the left sidebar.
 4. Click the **Import** tab at the top.
-5. Choose the file located at the root of the project: `final_db_setup.sql`.
-6. Click **Go** to run the import. This sets up all 20+ tables along with sample/dummy data.
+5. Click **Go** to run the import. This sets up all 20+ tables along with sample/dummy data.
 
 ### Step 3 — Visit the Application
 Once the database is imported, you can access the project:
@@ -71,9 +70,12 @@ Once the database is imported, you can access the project:
 
 ### Step 4 — Default Login Credentials
 Use the following credentials to access the Admin Dashboard:
-- **Email:** `abc@domain.com` (or `admin@college.edu`)
-- **Password:** `admin123`
-
+- **Email:** `abc@domain.com`
+- **Password:** `123456`
+  
+Use the following credentials to access the Faculty Dashboard:
+- **Email:** `abcf@domain.com`
+- **Password:** `123456`
 ---
 
 ## 4. Customization Guide (URL & Database)

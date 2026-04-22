@@ -310,54 +310,26 @@ MySQL stores:
 
 ### 4.1 Table Design
 
-#### Table 1: `marks`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| mark_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique mark record identifier |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| subject_id | INT | FOREIGN KEY | Reference to subject |
-| assignment_type | VARCHAR(50) | NOT NULL | CA1, CA2, MidTerm, FinalExam, etc. |
-| marks_obtained | DECIMAL(5,2) | NOT NULL | Marks obtained (0-100) |
-| marks_total | DECIMAL(5,2) | NOT NULL | Total marks (usually 100) |
-| weightage | DECIMAL(5,2) | NOT NULL | Weightage in final grade (%) |
-| entered_by | INT | FOREIGN KEY | Faculty who entered marks |
-| entered_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Date of entry |
-| is_verified | BOOLEAN | DEFAULT FALSE | Whether verified by HOD |
-| verified_by | INT | FOREIGN KEY | HOD who verified |
-
-#### Table 2: `grades`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| grade_id | INT | PRIMARY KEY, AUTO_INCREMENT | Grade identifier |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| subject_id | INT | FOREIGN KEY | Reference to subject |
-| semester_id | INT | FOREIGN KEY | Academic semester |
-| final_marks | DECIMAL(5,2) | NOT NULL | Calculated final marks |
-| letter_grade | VARCHAR(5) | NOT NULL | Grade letter (A+, A, B, C, D, E, F) |
-| grade_points | DECIMAL(3,2) | NOT NULL | Grade points (4.0 scale) |
-| status | ENUM('Passed','Failed') | NOT NULL | Pass/Fail status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation |
-
-#### Table 3: `gpa_records`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| gpa_id | INT | PRIMARY KEY, AUTO_INCREMENT | GPA record identifier |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| semester_id | INT | FOREIGN KEY | Semester for which GPA calculated |
-| semester_gpa | DECIMAL(4,2) | NOT NULL | GPA for the semester |
-| cumulative_gpa | DECIMAL(4,2) | NOT NULL | Cumulative GPA up to this semester |
-| academic_standing | VARCHAR(50) | Academic standing (Good, Warning, Probation) |
-| calculated_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Calculation timestamp |
-
-#### Table 4: `grade_scale`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| scale_id | INT | PRIMARY KEY, AUTO_INCREMENT | Scale identifier |
-| grade_letter | VARCHAR(5) | UNIQUE | Grade letter |
-| min_marks | DECIMAL(5,2) | Minimum marks for grade | 
-| max_marks | DECIMAL(5,2) | Maximum marks for grade |
-| grade_points | DECIMAL(3,2) | Grade points on 4.0 scale |
-| description | VARCHAR(100) | Grade description |
+#### Table 1: `student_grades`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| student_id | int(11) | Reference to student |
+| batch_id | int(11) | Reference to academic batch |
+| academic_year | varchar(20) | Academic year (e.g., 2026-2027) |
+| subject_id | int(11) | Reference to subject |
+| examination_id | int(11) | Reference to examination |
+| total_marks | decimal(5,2) | Total possible marks |
+| marks_obtained | decimal(5,2) | Marks obtained by the student |
+| grade | varchar(5) | Grade letter (A, B, C, etc.) |
+| grade_point | decimal(3,2) | Calculated grade points |
+| remarks | text | Additional comments |
+| is_internal | tinyint(1) | Flag for internal assessment |
+| is_practical | tinyint(1) | Flag for practical examination |
+| is_project | tinyint(1) | Flag for project work |
+| is_semester | tinyint(1) | Flag for end-semester examination |
+| created_by | int(11) | Faculty who entered the grades |
+| created_at | timestamp | Record creation time |
 
 ### 4.2 Flowchart
 
@@ -374,18 +346,17 @@ MySQL stores:
 ---
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
+**1. Academic Performance Dashboard**
+*Overview of student grades and class performance statistics.*
+![Performance Dashboard](https://example.com/screenshots/performance_dashboard.png)
 
-[Placeholder: Include screenshots showing:]
+**2. Individual Student Grade Modal**
+*Detailed view of a single student's performance across all subjects.*
+![Student Grade Modal](https://example.com/screenshots/performance_modal.png)
 
-1. **Marks Entry Form**: [Screenshot showing form for entering marks for different assessments]
-
-2. **Grade Sheet**: [Screenshot showing table of students with entered marks and calculated grades]
-
-3. **Student Academic Transcript**: [Screenshot showing student's grades, GPA, and academic standing]
-
-4. **Performance Dashboard**: [Screenshot showing charts of performance trends]
-
-5. **GPA Calculator**: [Screenshot showing GPA calculation breakdown by subject]
+**3. Semester-wise Results View**
+*Table display of results for a specific semester and batch.*
+![Semester Results](https://example.com/screenshots/performance_results.png)
 
 ---
 

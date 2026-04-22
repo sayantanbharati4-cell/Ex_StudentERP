@@ -305,63 +305,38 @@ Automated fee management with:
 
 ### 4.1 Table Design
 
-#### Table 1: `fee_structure`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| fee_id | INT | PRIMARY KEY, AUTO_INCREMENT | Fee structure identifier |
-| fee_name | VARCHAR(100) | NOT NULL | Fee name (Tuition, Lab, etc.) |
-| fee_amount | DECIMAL(10,2) | NOT NULL | Fee amount in rupees |
-| fee_type | VARCHAR(50) | Fixed, Variable, One-time |
-| academic_year | VARCHAR(10) | NOT NULL | Academic year applicable |
-| program_id | INT | FOREIGN KEY | Program this fee applies to |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+The Fee & Financial Management module utilizes the following tables from the core database:
 
-#### Table 2: `student_fees`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| student_fee_id | INT | PRIMARY KEY, AUTO_INCREMENT | Student fee record |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| fee_id | INT | FOREIGN KEY | Reference to fee structure |
-| amount_due | DECIMAL(10,2) | NOT NULL | Total amount due |
-| due_date | DATE | NOT NULL | Payment due date |
-| status | ENUM('Pending','Paid','Partial','Overdue') | DEFAULT 'Pending' | Payment status |
-| assigned_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Date fee assigned |
+#### Table 1: `fee_transactions`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| student_id | int(11) | Reference to student |
+| receipt_number | varchar(50) | Unique receipt number |
+| fee_type | varchar(50) | tuition, hostel, other |
+| academic_year | varchar(20) | Academic year |
+| semester | int(11) | Semester number |
+| amount_due | decimal(10,2) | Total due amount |
+| amount_paid | decimal(10,2) | Amount paid |
+| fine_amount | decimal(10,2) | Late fee/Fine |
+| payment_method | varchar(50) | cash, online, card |
+| payment_status | enum | paid, partial, pending |
+| bank_reference | varchar(255) | Reference for online payments |
+| transaction_date | date | Date of payment |
+| due_date | date | Payment deadline |
 
-#### Table 3: `payments`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| payment_id | INT | PRIMARY KEY, AUTO_INCREMENT | Payment record identifier |
-| student_fee_id | INT | FOREIGN KEY | Reference to student fee |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| amount_paid | DECIMAL(10,2) | NOT NULL | Amount paid |
-| payment_method | VARCHAR(50) | Cash, Online, Cheque, DD |
-| payment_date | DATE | NOT NULL | Payment date |
-| reference_no | VARCHAR(100) | Bank/gateway reference |
-| payment_status | ENUM('Success','Pending','Failed') | Payment status |
-| processed_by | INT | FOREIGN KEY | Staff who recorded payment |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation timestamp |
-
-#### Table 4: `receipts`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| receipt_id | INT | PRIMARY KEY, AUTO_INCREMENT | Receipt identifier |
-| payment_id | INT | FOREIGN KEY | Reference to payment |
-| receipt_number | VARCHAR(50) | UNIQUE | Receipt number |
-| receipt_date | DATE | NOT NULL | Receipt issue date |
-| receipt_path | VARCHAR(255) | Path to PDF receipt file |
-| email_sent | BOOLEAN | DEFAULT FALSE | Receipt emailed to parent |
-| sent_at | TIMESTAMP | Date receipt email sent |
-
-#### Table 5: `financial_records`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| record_id | INT | PRIMARY KEY, AUTO_INCREMENT | Financial record |
-| payment_id | INT | FOREIGN KEY | Reference to payment |
-| transaction_type | VARCHAR(50) | Debit, Credit, Refund |
-| amount | DECIMAL(10,2) | NOT NULL | Transaction amount |
-| narration | TEXT | Transaction description |
-| entry_date | DATE | NOT NULL | Entry date |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation timestamp |
+#### Table 2: `staff_salaries`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| staff_id | int(11) | Reference to staff member |
+| amount_paid | decimal(10,2) | Base salary paid |
+| bonus | decimal(10,2) | Bonus amount |
+| deductions | decimal(10,2) | Salary deductions |
+| month_year | varchar(20) | Payment month (e.g., April 2026) |
+| payment_date | date | Date of salary disbursement |
+| payment_method | varchar(50) | bank_transfer, cheque, cash |
+| receipt_no | varchar(50) | Unique transaction ID |
 
 ### 4.2 Flowchart
 
@@ -379,17 +354,38 @@ Automated fee management with:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots showing:]
+**1. Student Fee Payment Interface**
+*Portal for recording student fee payments and generating receipts.*
+- Student: Aarav Mehta (CSE24001)
+- Fee Type: Tuition
+- Amount Paid: 1,25,000.00
+- Payment Mode: Online
+![Fee Payment Form](https://example.com/screenshots/fee_payment.png)
 
-1. **Fee Structure Setup**: [Screenshot showing form to create fee components and amounts]
+**2. Fee Transaction Dashboard**
+*Overview of all financial transactions within the system.*
+| Receipt Number | Student Name | Amount | Status | Date |
+|---|---|---|---|---|
+| RCPT/2024/001 | Aarav Mehta | 125000.00 | paid | 2024-08-15 |
+| RCPT/2025/001 | Aarav Mehta | 80000.00 | paid | 2025-01-10 |
+| RCPT/2025/003 | Vivaan Saxena | 40000.00 | partial | 2025-01-12 |
+![Fee Dashboard](https://example.com/screenshots/fee_dashboard.png)
 
-2. **Student Fee Assignment**: [Screenshot showing list of students with assigned fees]
+**3. Digital Payment Receipt**
+*Sample digital receipt generated for a student payment.*
+- Receipt No: ERP_RCP_101
+- Student: Aarav Mehta
+- Amount: 25,600.00 (Including 600.00 fine)
+- Date: 2026-04-15
+![Digital Receipt](https://example.com/screenshots/fee_receipt.png)
 
-3. **Payment Entry Form**: [Screenshot showing payment collection form with student details]
-
-4. **Digital Receipt**: [Screenshot of PDF receipt with student info, fee details, amount paid]
-
-5. **Financial Dashboard**: [Screenshot showing fee collection statistics and financial summary]
+**4. Staff Salary Disbursement**
+*Interface for managing staff payroll and salary history.*
+- Staff: Rajesh Kumar (FAC001)
+- Month/Year: April 2026
+- Net Paid: 1,53,800.00 (150000 base + 5000 bonus - 1200 deduction)
+- Receipt No: ERP_PAY_APRIL_001
+![Staff Salary](https://example.com/screenshots/staff_salary.png)
 
 ---
 

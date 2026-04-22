@@ -312,65 +312,31 @@ Central analytics hub with:
 
 ### 4.1 Table Design
 
-#### Table 1: `dashboard_widgets`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| widget_id | INT | PRIMARY KEY, AUTO_INCREMENT | Widget identifier |
-| dashboard_id | INT | FOREIGN KEY | Dashboard this widget belongs to |
-| widget_type | VARCHAR(50) | KPI, Chart, Table, Metric, Gauge, etc. |
-| widget_name | VARCHAR(100) | Display name for widget |
-| metric_key | VARCHAR(100) | Which metric to display (enrollment_count, avg_gpa, etc) |
-| query_sql | TEXT | Custom SQL to fetch widget data |
-| refresh_interval | INT | Seconds between data refresh (600 for 10 min) |
-| position | INT | Position on dashboard (1-12 for 12 column grid) |
-| size | VARCHAR(20) | Widget size (small, medium, large) |
-| is_active | BOOLEAN | DEFAULT TRUE | Widget visibility |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+The Analytics & Reporting module aggregates data from across the system and tracks system usage through the audit log.
 
-#### Table 2: `analytics_reports`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| report_id | INT | PRIMARY KEY, AUTO_INCREMENT | Report identifier |
-| report_name | VARCHAR(200) | Report name |
-| report_type | VARCHAR(50) | Enrollment, Performance, Attendance, Financial |
-| description | TEXT | Report description and usage |
-| sql_query | LONGTEXT | Query to fetch report data |
-| created_by | INT | FOREIGN KEY | User who created report |
-| is_scheduled | BOOLEAN | Is report automtically generated |
-| schedule_frequency | VARCHAR(50) | Daily, Weekly, Monthly, Semester |
-| email_recipients | TEXT | Comma-separated emails for distribution |
-| report_format | VARCHAR(20) | PDF, Excel, CSV, HTML |
-| last_generated | TIMESTAMP | Last execution time |
-| is_public | BOOLEAN | DEFAULT FALSE | Public or admin-only report |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+#### Table 1: `audit_logs`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| user_id | int(11) | Reference to the user who performed the action |
+| action | varchar(50) | Type of action (created, updated, deleted, login, logout) |
+| table_name | varchar(100) | Name of the table affected |
+| record_id | int(11) | ID of the affected record |
+| old_values | longtext | Data before the change (JSON) |
+| new_values | longtext | Data after the change (JSON) |
+| ip_address | varchar(45) | IP address of the user |
+| user_agent | varchar(255) | Browser/Device information |
+| created_at | timestamp | Timestamp of the action |
 
-#### Table 3: `metrics_cache`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| metric_id | INT | PRIMARY KEY, AUTO_INCREMENT | Metric identifier |
-| metric_key | VARCHAR(100) | UNIQUE | Metric unique identifier |
-| metric_name | VARCHAR(200) | Display name |
-| metric_value | DECIMAL(12,2) | Current metric value |
-| unit | VARCHAR(50) | %, Count, Rupees, etc. |
-| comparison_value | DECIMAL(12,2) | Previous period value for comparison |
-| trend | VARCHAR(10) | UP, DOWN, STABLE |
-| last_updated | TIMESTAMP | When metric last computed |
-| cache_valid_until | TIMESTAMP | Until when cached value is valid |
-
-#### Table 4: `performance_analytics`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| analytics_id | INT | PRIMARY KEY, AUTO_INCREMENT | Record identifier |
-| student_id | INT | FOREIGN KEY | Student reference |
-| semester_id | INT | Semester reference |
-| gpa_semester | DECIMAL(4,2) | Semester GPA |
-| gpa_cumulative | DECIMAL(4,2) | Cumulative GPA |
-| percentile_rank | INT | Percentile (0-100) among peers |
-| attendance_percentage | DECIMAL(5,2) | Attendance % |
-| grade_distribution | JSON | Count of A/B/C/D/F grades |
-| predicted_gpa_next | DECIMAL(4,2) | Predicted next semester GPA |
-| risk_flag | BOOLEAN | Is student at risk of failure/dropout |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Analysis date |
+#### Table 2: `student_attendance_summary` (Aggregated)
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key |
+| student_id | int(11) | Reference to student |
+| total_classes | int(11) | Total classes held |
+| attended_classes | int(11) | Total classes attended |
+| attendance_percentage | decimal(5,2) | Calculated percentage |
+| last_updated | timestamp | Last aggregation timestamp |
 
 ### 4.2 Flowchart
 
@@ -388,17 +354,35 @@ Central analytics hub with:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots showing:]
+**1. Executive Analytics Dashboard**
+*Overview of institutional health metrics for top-level administrators.*
+- Total Students: 2,450 (Active: 2,380)
+- Average Institutional GPA: 7.42
+- Average Attendance: 88.5%
+![Executive Dashboard](https://example.com/screenshots/ana_dashboard.png)
 
-1. **Executive Dashboard**: [Screenshot showing KPI cards: Total Students, Avg GPA, Attendance %, Pass Rate, Enrollment Growth]
+**2. Student Performance Distribution**
+*Bell curve analysis showing the distribution of grades across the institution.*
+- A+ Grades: 15%
+- A Grades: 25%
+- B Grades: 40%
+![Performance Distribution](https://example.com/screenshots/ana_grades.png)
 
-2. **Student Performance Distribution**: [Screenshot of bell curve chart showing GPA distribution of all students]
+**3. System Audit Log**
+*Detailed record of all administrative and faculty actions for security auditing.*
+| User | Action | Table | Date | IP Address |
+|---|---|---|---|---|
+| Admin | updated | students | 2026-04-20 | 192.168.1.5 |
+| Rajesh Kumar | login | users | 2026-04-20 | 192.168.1.12 |
+| Admin | created | examinations | 2026-04-19 | 192.168.1.5 |
+![Audit Log](https://example.com/screenshots/ana_audit.png)
 
-3. **Attendance Heatmap**: [Screenshot of heatmap showing attendance by class/batch with color intensity]
-
-4. **Department Comparison**: [Screenshot showing bar chart comparing average GPA by department]
-
-5. **Report Builder**: [Screenshot showing interface to custom build reports with table selection and filter options]
+**4. Batch-wise Attendance Analytics**
+*Comparative bar chart showing attendance percentages across different academic batches.*
+- CSE 2024: 92%
+- ECE 2024: 85%
+- ME 2024: 78%
+![Attendance Analytics](https://example.com/screenshots/ana_attendance.png)
 
 ---
 

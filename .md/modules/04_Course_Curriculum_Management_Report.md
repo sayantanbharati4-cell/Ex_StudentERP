@@ -295,50 +295,99 @@ Automated curriculum management with:
 
 ### 4.1 Table Design
 
-#### Table 1: `programs`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| program_id | INT | PRIMARY KEY, AUTO_INCREMENT | Program identifier |
-| program_name | VARCHAR(100) | NOT NULL, UNIQUE | Program name (B.Tech CSE, etc.) |
-| program_code | VARCHAR(20) | UNIQUE | Program code |
-| duration_years | INT | NOT NULL | Program duration in years |
-| total_credits | INT | NOT NULL | Total credits in program |
-| description | TEXT | Program description |
-| is_active | BOOLEAN | DEFAULT TRUE | Current program status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+#### Table 1: `academic_programs`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| name | varchar(255) | Program name |
+| code | varchar(50) | Program code |
+| description | text | Program description |
+| duration_years | int(11) | Duration in years |
+| total_credits | int(11) | Total credits |
+| department_id | int(11) | Reference to department |
+| degree_type | enum | Type of degree |
+| program_level | enum | Program level |
+| accreditation_status | enum | Accreditation status |
+| start_date | date | Program start date |
+| end_date | date | Program end date |
+| total_semesters | int(11) | Total number of semesters |
+| max_students | int(11) | Maximum intake capacity |
+| current_students | int(11) | Current enrollment |
+| program_fee | decimal(10,2) | Base program fee |
+| status | enum | Active/Inactive status |
 
-#### Table 2: `courses`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| course_id | INT | PRIMARY KEY, AUTO_INCREMENT | Course identifier |
-| course_code | VARCHAR(20) | UNIQUE, NOT NULL | Course code |
-| course_name | VARCHAR(100) | NOT NULL | Course name |
-| description | TEXT | Course description |
-| credits | INT | NOT NULL | Course credits |
-| learning_outcomes | TEXT | Learning objectives |
-| syllabus | LONGTEXT | Course syllabus |
-| assessment_method | TEXT | Assessment methods |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+#### Table 2: `academic_batches`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| program_id | int(11) | Reference to academic program |
+| batch_year | year(4) | Year of the batch |
+| batch_code | varchar(50) | Unique batch code |
+| batch_name | varchar(255) | Name of the batch |
+| start_date | date | Batch start date |
+| end_date | date | Batch end date |
+| current_semester | int(11) | Current active semester |
+| total_students | int(11) | Enrolled students |
+| max_capacity | int(11) | Maximum capacity |
+| class_teacher_id | int(11) | Reference to class teacher |
+| fee_structure | longtext | JSON fee structure |
+| admission_criteria | text | Criteria for admission |
+| status | enum | Batch status |
 
-#### Table 3: `curriculum`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| curriculum_id | INT | PRIMARY KEY, AUTO_INCREMENT | Curriculum version ID |
-| program_id | INT | FOREIGN KEY | Reference to program |
-| semester | INT | NOT NULL | Semester number |
-| course_id | INT | FOREIGN KEY | Course in curriculum |
-| is_compulsory | BOOLEAN | DEFAULT TRUE | Compulsory or elective |
-| version | INT | NOT NULL | Curriculum version |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+#### Table 3: `subjects`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| name | varchar(255) | Subject name |
+| code | varchar(50) | Subject code |
+| description | text | Description of the subject |
+| credit_hours | decimal(4,2) | Credit hours |
+| theory_hours | int(11) | Theory hours per week |
+| practical_hours | int(11) | Practical hours per week |
+| subject_type | enum | Core, elective, lab, etc. |
+| difficulty_level | enum | Basic, intermediate, advanced |
+| department_id | int(11) | Reference to department |
+| prerequisites | text | Prerequisite subjects |
+| learning_outcomes | text | Expected learning outcomes |
+| status | enum | Active/Inactive status |
 
-#### Table 4: `prerequisites`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| prerequisite_id | INT | PRIMARY KEY, AUTO_INCREMENT | Prerequisite rule ID |
-| course_id | INT | FOREIGN KEY | Course requiring prerequisite |
-| prerequisite_id_ref | INT | FOREIGN KEY | Required course |
-| min_grade | VARCHAR(5) | Minimum grade required |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+#### Table 4: `course_mappings`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| program_id | int(11) | Reference to academic program |
+| subject_id | int(11) | Reference to subject |
+| batch_id | int(11) | Reference to academic batch |
+| faculty_id | int(11) | Reference to assigned faculty |
+| academic_year | varchar(20) | Academic year |
+| semester | int(11) | Semester number |
+| status | enum | Active/Inactive status |
+
+#### Table 5: `class_schedules`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| batch_id | int(11) | Reference to batch |
+| subject_id | int(11) | Reference to subject |
+| faculty_id | int(11) | Reference to faculty |
+| day_of_week | varchar(20) | Day of the week |
+| start_time | time | Class start time |
+| end_time | time | Class end time |
+| room_number | varchar(50) | Room or hall number |
+| status | enum | Active/Cancelled |
+
+#### Table 6: `staff_subject_allocations`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| staff_id | int(11) | Reference to staff |
+| subject_id | int(11) | Reference to subject |
+| batch_id | int(11) | Reference to batch |
+| academic_year | varchar(20) | Academic year |
+| semester | int(11) | Semester number |
+| allocation_type | varchar(50) | Theory/Practical/Tutorial |
+| hours_per_week | int(11) | Allocated hours per week |
+| status | enum | Active/Inactive status |
 
 ### 4.2 Flowchart
 
@@ -355,18 +404,21 @@ Automated curriculum management with:
 ---
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
+**1. Academic Programs Management**
+*Interface to define and manage degrees and programs.*
+![Programs Management](https://example.com/screenshots/programs_list.png)
 
-[Placeholder: Include screenshots showing:]
+**2. Batch Configuration**
+*Setting up academic batches for specific years and programs.*
+![Batch Setup](https://example.com/screenshots/batch_setup.png)
 
-1. **Program Management**: [Screenshot of program creation form and program list]
+**3. Subject and Course Definition**
+*Detailed entry for subjects including credit hours and type.*
+![Subject Definition](https://example.com/screenshots/subject_create.png)
 
-2. **Course Management**: [Screenshot showing course catalog with details]
-
-3. **Curriculum Design**: [Screenshot showing semester-wise curriculum layout]
-
-4. **Prerequisite Mapping**: [Screenshot showing prerequisite relationship visualization]
-
-5. **Schedule/Timetable**: [Screenshot showing generated class schedule]
+**4. Class Scheduling (Timetable)**
+*Calendar view showing the weekly schedule for different batches.*
+![Class Schedule](https://example.com/screenshots/class_schedule.png)
 
 ---
 

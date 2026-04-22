@@ -329,54 +329,39 @@ MySQL database stores:
 ### 4.1 Table Design
 
 #### Table 1: `attendance`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| attendance_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique attendance record identifier |
-| class_id | INT | FOREIGN KEY | Reference to class/section |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| subject_id | INT | FOREIGN KEY | Reference to subject |
-| attendance_date | DATE | NOT NULL, INDEX | Date of class |
-| status | ENUM('Present','Absent','Leave','Medical') | NOT NULL | Attendance status |
-| marked_by | INT | FOREIGN KEY | Reference to faculty user |
-| marked_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Time of marking |
-| remarks | TEXT | Additional notes about absence |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation time |
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| student_id | int(11) | Reference to student |
+| subject_id | int(11) | Reference to subject |
+| batch_id | int(11) | Reference to academic batch |
+| session_id | int(11) | Session identifier |
+| attendance_date | date | Date of class |
+| status | enum('present','absent','late','half_day') | Attendance status |
+| remarks | text | Additional notes |
+| marked_by | int(11) | Reference to faculty/admin who marked it |
+| created_at | timestamp | Record creation time |
 
-#### Table 2: `leave_applications`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| leave_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique leave application ID |
-| student_id | INT | FOREIGN KEY | Reference to student |
-| leave_type | VARCHAR(50) | NOT NULL | Medical, Permission, etc. |
-| from_date | DATE | NOT NULL | Leave start date |
-| to_date | DATE | NOT NULL | Leave end date |
-| reason | TEXT | NOT NULL | Reason for leave |
-| attachment_path | VARCHAR(255) | Path to medical certificate, etc. |
-| status | ENUM('Pending','Approved','Rejected') | DEFAULT 'Pending' | Approval status |
-| approved_by | INT | FOREIGN KEY | Reference to approver |
-| approved_date | DATE | Date of approval |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Application date |
+#### Table 2: `student_attendance_summary`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| student_id | int(11) | Reference to student |
+| batch_id | int(11) | Reference to academic batch |
+| subject_id | int(11) | Reference to subject |
+| semester | int(11) | Academic semester |
+| attendance_percentage | decimal(5,2) | Calculated attendance percentage |
+| created_at | timestamp | Record creation time |
 
-#### Table 3: `attendance_settings`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| setting_id | INT | PRIMARY KEY, AUTO_INCREMENT | Setting identifier |
-| min_attendance_percent | DECIMAL(5,2) | NOT NULL | Minimum required attendance % |
-| alert_threshold | DECIMAL(5,2) | NOT NULL | % below which alerts trigger |
-| warning_message | TEXT | Message to display to students |
-| updated_by | INT | FOREIGN KEY | Reference to admin |
-| updated_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | Last update |
-
-#### Table 4: `attendance_logs`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| log_id | INT | PRIMARY KEY, AUTO_INCREMENT | Log entry identifier |
-| attendance_id | INT | FOREIGN KEY | Reference to attendance record |
-| old_status | VARCHAR(50) | Previous status |
-| new_status | VARCHAR(50) | Updated status |
-| changed_by | INT | FOREIGN KEY | User who made change |
-| changed_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Time of change |
-| reason_for_change | TEXT | Why attendance was modified |
+#### Table 3: `holidays`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| holiday_date | date | Date of the holiday |
+| title | varchar(255) | Name of the holiday |
+| description | text | Details about the holiday |
+| created_by | int(11) | User who created the record |
+| created_at | timestamp | Record creation time |
 
 ### 4.2 Flowchart
 
@@ -394,17 +379,19 @@ MySQL database stores:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots of the module's user interface here, showing:]
+**1. Attendance Dashboard**
+*Overview of attendance statistics for different batches and subjects.*
+![Attendance Dashboard](https://example.com/screenshots/attendance_dashboard.png)
 
-1. **Attendance Marking Interface**: [Screenshot showing list of students in a class with checkboxes to mark attendance]
+**2. Mark Attendance Interface**
+*Faculty interface to mark daily attendance for students.*
+- Batch: CSE 2024 | Subject: Data Structures
+- Student List with Present/Absent/Late toggles.
+![Mark Attendance](https://example.com/screenshots/attendance_mark.png)
 
-2. **Attendance Report**: [Screenshot showing attendance percentage by student with filters]
-
-3. **Student Attendance Dashboard**: [Screenshot showing individual student's attendance record and percentage]
-
-4. **Leave Application Form**: [Screenshot showing form to apply for leave with date range and reason]
-
-5. **Attendance Analytics**: [Screenshot showing charts of attendance trends and chronically absent students]
+**3. Attendance Reports**
+*Filterable reports showing student-wise and subject-wise attendance percentages.*
+![Attendance Reports](https://example.com/screenshots/attendance_report.png)
 
 ---
 

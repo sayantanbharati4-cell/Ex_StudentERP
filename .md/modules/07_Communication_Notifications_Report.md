@@ -314,64 +314,23 @@ Automated communication with:
 
 ### 4.1 Table Design
 
-#### Table 1: `announcements`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| announcement_id | INT | PRIMARY KEY, AUTO_INCREMENT | Announcement identifier |
-| title | VARCHAR(200) | NOT NULL | Announcement title |
-| content | LONGTEXT | NOT NULL | Announcement content |
-| priority | ENUM('Low','Normal','High','Urgent') | DEFAULT 'Normal' | Message priority |
-| created_by | INT | FOREIGN KEY | Admin who created announcement |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
-| published_at | TIMESTAMP | Publication timestamp |
-| is_active | BOOLEAN | DEFAULT TRUE | Active announcement status |
+The Communication & Notifications module utilizes the following table from the core database:
 
-#### Table 2: `notifications`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| notification_id | INT | PRIMARY KEY, AUTO_INCREMENT | Notification identifier |
-| announcement_id | INT | FOREIGN KEY | Reference to announcement |
-| recipient_type | VARCHAR(50) | AllStudents, AllParents, ByProgram, ByBatch, etc. |
-| recipient_filter | TEXT | JSON filters (program_id, batch_id, etc.) |
-| delivery_channels | VARCHAR(100) | Email, SMS, InApp (comma-separated) |
-| scheduled_date | DATETIME | When notification should be sent |
-| status | ENUM('Draft','Scheduled','Sending','Sent','Failed') | Status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
-
-#### Table 3: `delivery_log`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| log_id | INT | PRIMARY KEY, AUTO_INCREMENT | Log entry identifier |
-| notification_id | INT | FOREIGN KEY | Reference to notification |
-| recipient_id | INT | FOREIGN KEY | Recipient (student/parent) |
-| channel | VARCHAR(50) | Email, SMS, InApp |
-| recipient_address | VARCHAR(255) | Email/phone to which sent |
-| status | ENUM('Pending','Sent','Delivered','Failed','Bounced') | Delivery status |
-| attempt_count | INT | DEFAULT 0 | Number of delivery attempts |
-| last_attempt | TIMESTAMP | Last delivery attempt time |
-| error_message | TEXT | Error details if failed |
-| delivered_at | TIMESTAMP | Actual delivery timestamp |
-
-#### Table 4: `read_status`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| status_id | INT | PRIMARY KEY, AUTO_INCREMENT | Status identifier |
-| log_id | INT | FOREIGN KEY | Reference to delivery log |
-| notification_id | INT | FOREIGN KEY | Reference to notification |
-| recipient_id | INT | FOREIGN KEY | Recipient |
-| is_read | BOOLEAN | DEFAULT FALSE | Whether read by recipient |
-| read_at | TIMESTAMP | When message was read |
-
-#### Table 5: `notification_templates`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| template_id | INT | PRIMARY KEY, AUTO_INCREMENT | Template identifier |
-| template_name | VARCHAR(100) | UNIQUE | Template name |
-| template_type | VARCHAR(50) | FeeReminder, AttendanceAlert, ResultNotification, etc. |
-| subject | VARCHAR(200) | Email subject line |
-| content | LONGTEXT | Template content with variables ({{student_name}}) |
-| created_by | INT | FOREIGN KEY | Who created template |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Creation date |
+#### Table 1: `communications`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| sender_id | int(11) | Reference to the user who sent the message |
+| sender_type | varchar(50) | Role of the sender (admin, faculty) |
+| title | varchar(255) | Subject or title of the communication |
+| message | text | Content of the message |
+| message_type | enum | notice, alert, email, sms |
+| priority | enum | high, normal, low |
+| target_type | varchar(50) | Targeted group (all, student, batch) |
+| target_id | int(11) | ID of the target group if applicable |
+| is_published | tinyint(1) | Whether the message is visible to users |
+| published_at | timestamp | Date and time of publication |
+| created_at | timestamp | Record creation timestamp |
 
 ### 4.2 Flowchart
 
@@ -389,17 +348,27 @@ Automated communication with:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots showing:]
+**1. Create Institutional Announcement**
+*Form used by administrators to post notices to students and faculty.*
+- Fields: Title, Message Type, Priority, Message Content.
+- *Sample Input:* Title: "Holiday on 26th January", Type: "notice", Priority: "normal".
+![Announcement Form](https://example.com/screenshots/comm_create.png)
 
-1. **Announcement Creator**: [Screenshot showing form to create announcement with title and rich text content]
+**2. Institutional Notice Board**
+*View for students and faculty to see all published announcements.*
+| Title | Date | Priority | Type |
+|---|---|---|---|
+| Holiday on 26th January | 2026-03-18 | normal | notice |
+| Mid-Term Exam Schedule | 2026-03-18 | high | notice |
+| Hostel Fee Reminder | 2026-03-18 | high | alert |
+![Notice Board](https://example.com/screenshots/comm_dashboard.png)
 
-2. **Recipient Selection**: [Screenshot showing interface to select recipient groups and segments]
-
-3. **Delivery Settings**: [Screenshot showing channel selection and scheduling options]
-
-4. **Delivery Status Dashboard**: [Screenshot showing delivery status, read count, and failed message tracking]
-
-5. **In-App Notification Center**: [Screenshot showing student's notification inbox with messages and read status]
+**3. Targeted Email Notification**
+*Interface for sending automated email notifications to specific batches.*
+- Sender: Faculty (Rajesh Kumar)
+- Target: Batch CSE2024
+- Content: "Data Structures Lab Cancelled for 5th February."
+![Email Notification](https://example.com/screenshots/comm_email.png)
 
 ---
 

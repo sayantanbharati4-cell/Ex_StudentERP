@@ -304,46 +304,37 @@ Dedicated parent portal with:
 
 ### 4.1 Table Design
 
-#### Table 1: `parent_accounts`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| parent_id | INT | PRIMARY KEY, AUTO_INCREMENT | Parent account identifier |
-| student_id | INT | FOREIGN KEY | Associated student |
-| email | VARCHAR(100) | UNIQUE | Parent email for login |
-| phone | VARCHAR(15) | Parent phone number |
-| password_hash | VARCHAR(255) | Hashed login password |
-| name | VARCHAR(100) | Parent/Guardian name |
-| relationship | VARCHAR(50) | Father, Mother, Guardian, etc. |
-| is_active | BOOLEAN | DEFAULT TRUE | Account active status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Account creation date |
-| last_login | TIMESTAMP | Last portal login |
+The Parent & Guardian Portal primarily provides a filtered view of the core student and academic tables. Access is restricted to data associated with the parent's registered student.
 
-#### Table 2: `parent_messages`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| message_id | INT | PRIMARY KEY, AUTO_INCREMENT | Message identifier |
-| parent_id | INT | FOREIGN KEY | Reference to parent |
-| student_id | INT | FOREIGN KEY | Student message is about |
-| faculty_id | INT | FOREIGN KEY | Faculty recipient |
-| message_type | VARCHAR(50) | Question, Suggestion, Feedback, Request |
-| subject | VARCHAR(200) | Message subject |
-| message_body | LONGTEXT | Message content |
-| status | ENUM('New','Read','Replied','Closed') | Message status |
-| replied_at | TIMESTAMP | When faculty replied |
-| reply_body | LONGTEXT | Faculty reply |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Message date |
+#### Table 1: `students` (Referenced)
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key |
+| first_name | varchar(100) | Student's first name |
+| last_name | varchar(100) | Student's last name |
+| father_name | varchar(200) | Father's name |
+| mother_name | varchar(200) | Mother's name |
+| roll_number | varchar(50) | Class roll number |
+| status | enum | Student status |
 
-#### Table 3: `parent_alerts`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| alert_id | INT | PRIMARY KEY, AUTO_INCREMENT | Alert identifier |
-| parent_id | INT | FOREIGN KEY | Alert recipient |
-| student_id | INT | FOREIGN KEY | Student alert concerns |
-| alert_type | VARCHAR(50) | Low Attendance, Low Grades, Fee Due, etc. |
-| alert_message | TEXT | Alert content |
-| is_read | BOOLEAN | DEFAULT FALSE | Alert read status |
-| read_at | TIMESTAMP | When parent read alert |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Alert creation date |
+#### Table 2: `student_grades` (Referenced)
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key |
+| student_id | int(11) | Reference to student |
+| marks_obtained | decimal(5,2) | Marks achieved |
+| total_marks | decimal(5,2) | Maximum marks |
+| grade | varchar(5) | Assigned letter grade |
+| remarks | text | Faculty comments |
+
+#### Table 3: `attendance` (Referenced)
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key |
+| student_id | int(11) | Reference to student |
+| attendance_date | date | Date of attendance |
+| status | enum | present, absent, late, half_day |
+| remarks | text | Reason for absence/lateness |
 
 ### 4.2 Flowchart
 
@@ -361,17 +352,34 @@ Dedicated parent portal with:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots showing:]
+**1. Parent Portal Dashboard**
+*Unified view for parents to see their child's academic and attendance status at a glance.*
+- Student: Aarav K Mehta
+- Current GPA: 8.83
+- Attendance: 85.0%
+![Parent Dashboard](https://example.com/screenshots/parent_dashboard.png)
 
-1. **Parent Login**: [Screenshot of login interface with email/phone options]
+**2. Academic Progress View**
+*Detailed list of subjects and grades obtained by the student.*
+| Subject | Internal Marks | Final Marks | Grade | Remarks |
+|---|---|---|---|---|
+| Data Structures | 42 / 50 | 81 / 100 | A | Good |
+| DBMS | 38 / 50 | 75 / 100 | B | - |
+| Computer Networks | 44 / 50 | 88 / 100 | A+ | Excellent |
+![Academic Progress](https://example.com/screenshots/parent_grades.png)
 
-2. **Student Dashboard**: [Screenshot showing student's overview with name, program, attendance%, GPA]
+**3. Attendance Heatmap**
+*Visual calendar view showing student's daily attendance records.*
+- Present: Green
+- Absent: Red (e.g., 2025-02-06)
+- Late: Yellow (e.g., 2025-02-07)
+![Attendance View](https://example.com/screenshots/parent_attendance.png)
 
-3. **Grades Page**: [Screenshot showing list of courses with grades, percentage, and grade points]
-
-4. **Attendance Record**: [Screenshot showing attendance heatmap and percentage by class]
-
-5. **Messaging Interface**: [Screenshot showing list of messages with faculty and reply threads]
+**4. Fee Payment Status**
+*Parent view of paid and pending fees for their child.*
+- Receipt: RCPT/2024/001 | Amount: 1,25,000.00 | Status: paid
+- Receipt: RCPT/2025/001 | Amount: 80,000.00 | Status: paid
+![Fee Status](https://example.com/screenshots/parent_fees.png)
 
 ---
 

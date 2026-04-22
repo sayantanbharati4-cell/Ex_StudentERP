@@ -340,73 +340,81 @@ MySQL 8.0 database engine stores and manages all student information:
 
 ### 4.1 Table Design
 
-The Student Information Management System uses the following database tables:
+The Student Information Management module utilizes the following tables from the core database:
 
 #### Table 1: `students`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| student_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique student identifier |
-| registration_no | VARCHAR(20) | UNIQUE, NOT NULL | Registration number assigned during admission |
-| first_name | VARCHAR(50) | NOT NULL | Student's first name |
-| last_name | VARCHAR(50) | NOT NULL | Student's last name |
-| email | VARCHAR(100) | UNIQUE, NOT NULL | Student's email address |
-| phone | VARCHAR(15) | NOT NULL | Student's contact number |
-| date_of_birth | DATE | NOT NULL | Student's date of birth |
-| gender | ENUM('M','F','Other') | NOT NULL | Student's gender |
-| address | TEXT | NOT NULL | Residential address |
-| city | VARCHAR(50) | NOT NULL | City of residence |
-| state | VARCHAR(50) | NOT NULL | State of residence |
-| postal_code | VARCHAR(10) | NOT NULL | Postal code |
-| admission_date | DATE | NOT NULL | Date of admission |
-| status | ENUM('Active','Inactive','Graduated','Leave') | DEFAULT 'Active' | Current student status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
-| updated_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | Last update timestamp |
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| user_id | int(11) | Reference to user account |
+| admission_number | varchar(50) | Unique admission number |
+| registration_no | varchar(50) | University registration number |
+| roll_number | varchar(50) | Class roll number |
+| first_name | varchar(100) | Student's first name |
+| last_name | varchar(100) | Student's last name |
+| date_of_birth | date | Student's date of birth |
+| gender | enum | 'male', 'female', 'other' |
+| email | varchar(100) | Institutional email |
+| phone | varchar(20) | Contact number |
+| permanent_address | text | Residential address |
+| program_id | int(11) | Reference to academic program |
+| batch_id | int(11) | Reference to batch |
+| admission_date | date | Date of admission |
+| status | enum | 'active', 'inactive', 'graduated', etc. |
 
-#### Table 2: `emergency_contacts`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| contact_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique contact identifier |
-| student_id | INT | FOREIGN KEY | Reference to students table |
-| contact_name | VARCHAR(100) | NOT NULL | Emergency contact person name |
-| relationship | VARCHAR(50) | NOT NULL | Relationship to student |
-| phone | VARCHAR(15) | NOT NULL | Contact phone number |
-| email | VARCHAR(100) | Email address of emergency contact |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation date |
+#### Table 2: `users`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| name | varchar(100) | Full name of the user |
+| role | enum | 'admin', 'faculty', 'student' |
+| email | varchar(100) | Login email |
+| password | varchar(255) | Hashed password |
+| status | enum | 'active', 'suspended' |
+| created_at | timestamp | Record creation time |
 
-#### Table 3: `enrollments`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| enrollment_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique enrollment identifier |
-| student_id | INT | FOREIGN KEY | Reference to students table |
-| program_id | INT | FOREIGN KEY | Reference to programs table |
-| batch_id | INT | FOREIGN KEY | Reference to batches table |
-| enrollment_date | DATE | NOT NULL | Date of enrollment |
-| enrollment_status | ENUM('Enrolled','Suspended','Withdrawn') | DEFAULT 'Enrolled' | Current enrollment status |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation date |
+#### Table 3: `institutes`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| code | varchar(50) | Institute code |
+| name | varchar(255) | Name of the institute |
+| type_id | int(11) | Reference to institute type |
+| email | varchar(100) | Official email |
+| status | enum | Active/Inactive status |
 
-#### Table 4: `documents`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| document_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique document identifier |
-| student_id | INT | FOREIGN KEY | Reference to students table |
-| document_type | VARCHAR(100) | NOT NULL | Type of document (12th Marksheet, etc.) |
-| submission_date | DATE | Document submission date |
-| verification_status | ENUM('Pending','Verified','Rejected') | DEFAULT 'Pending' | Verification status |
-| verified_by | INT | FOREIGN KEY | Reference to admin user who verified |
-| verified_date | DATE | Date of verification |
-| file_path | VARCHAR(255) | Path to stored document file |
-| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation date |
+#### Table 4: `institute_types`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| type_name | varchar(255) | Name of type (e.g., Engineering, Medical) |
+| description | text | Description of the type |
+| status | enum | Active/Inactive status |
 
-#### Table 5: `activity_logs`
-| Field | Type | Constraint | Description |
-|---|---|---|---|
-| log_id | INT | PRIMARY KEY, AUTO_INCREMENT | Unique log identifier |
-| student_id | INT | FOREIGN KEY | Reference to students table |
-| action | VARCHAR(100) | NOT NULL | Description of action (create, update, delete) |
-| old_value | TEXT | Previous value before modification |
-| new_value | TEXT | New value after modification |
-| modified_by | INT | FOREIGN KEY | User ID who made the modification |
-| modified_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Date and time of modification |
+#### Table 5: `branches`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| code | varchar(50) | Branch code |
+| name | varchar(255) | Name of the branch |
+| institute_id | int(11) | Reference to institute |
+| status | enum | Active/Inactive status |
+
+#### Table 6: `departments`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| code | varchar(50) | Department code |
+| name | varchar(255) | Name of the department |
+| institute_id | int(11) | Reference to institute |
+| status | enum | Active/Inactive status |
+
+#### Table 7: `system_settings`
+| Field | Type | Description |
+|---|---|---|
+| id | int(11) | Primary Key, Auto Increment |
+| setting_key | varchar(50) | Setting key (e.g., institution_name) |
+| setting_value | text | Setting value |
 
 ### 4.2 Flowchart
 
@@ -456,17 +464,35 @@ The Student Information Management System uses the following database tables:
 
 ## CHAPTER 5: SAMPLE SCREENSHOTS
 
-[Placeholder: Include screenshots of the module's user interface here, showing the following key screens:]
+**1. Student Registration Form**
+*Demonstrates the registration interface capturing personal and academic data.*
+- Fields include: First Name, Last Name, Date of Birth, Gender, Program, Batch.
+- *Sample Input from Database:* Aarav K Mehta (Male, 2005-06-15), Program: B.Tech CSE (ID: 1), Batch: 2024-2028 (ID: 1).
+![Student Registration Form](https://example.com/screenshots/sim_registration.png)
 
-1. **Student Registration Form**: [Screenshot showing form with fields for personal information, contact details, and submission button]
+**2. Student Dashboard / List View**
+*Displays a tabular view of enrolled students from the `students` table.*
+| Roll Number | Name | Email | Program | Status |
+|---|---|---|---|---|
+| CSE24001 | Aarav Mehta | aarav.mehta@nitdelhi.ac.in | CSE | active |
+| CSE24002 | Vihaan Khanna | vihaan.khanna@nitdelhi.ac.in | CSE | active |
+| ECE24001 | Ananya Singh | ananya.singh@nitdelhi.ac.in | ECE | active |
+![Student List View](https://example.com/screenshots/sim_dashboard.png)
 
-2. **Student Dashboard/List View**: [Screenshot displaying table of all students with columns for registration number, name, enrollment status, and action buttons for view/edit/delete]
+**3. Student Profile View**
+*A comprehensive view of a single student's profile.*
+- Admission Number: ADM2024001
+- Father's Name: Rajesh Mehta
+- Mother's Name: Sunita Mehta
+- Permanent Address: 12, Green Park, Delhi
+![Student Profile View](https://example.com/screenshots/sim_profile.png)
 
-3. **Student Profile View**: [Screenshot showing comprehensive student information including personal details, enrollment history, and document verification status]
-
-4. **Search and Filter Interface**: [Screenshot showing search bar, filter options (by program, batch, status), and filtered results]
-
-5. **Emergency Contact Management**: [Screenshot showing form to add/edit emergency contact information for a student]
+**4. System Settings Management**
+*Interface for administrators to update global configurations from `system_settings`.*
+- Institution Name: Kingston Polytechnic College
+- Current Academic Year: 2026-2027
+- Minimum Attendance Percentage: 75%
+![System Settings](https://example.com/screenshots/sim_settings.png)
 
 ---
 
